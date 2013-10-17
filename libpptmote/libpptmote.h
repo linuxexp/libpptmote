@@ -38,5 +38,5 @@ LIBPPTMOTE_API int set_key_code (unsigned int keybd);
 LIBPPTMOTE_API int init_pptmote ();
 LIBPPTMOTE_API ULONG connect_show_prompt();
 LIBPPTMOTE_API int key_emulate ();
-
+LIBPPTMOTE_API BOOL set_file_send (BOOL val);
 #endif

@@ -25,11 +25,13 @@
 #ifndef LIBPPTMOTE_H
 #define LIBPPTMOTE_H
 
+ULONG connect_show_prompt (SOCKADDR_BTH sock_remote_address);
 int set_callback (int (*func) (char *));
 char * set_device (char *name);
 int set_key_code (unsigned int keybd);
 int init_pptmote ();
 ULONG connect_show_prompt();
 int key_emulate ();
+BOOL set_file_send (BOOL val);
 
 #endif

@@ -33,12 +33,21 @@ char 	obex_connect[] 			= {0x80, 0x00, 0x1a, 0x10, 0x00, 0xff, 0xff, 0x46, 0x00,
 char 	obex_send_file[] 		= {0x02, 0x00, 0x1b, 0x01, 0x00, 0x13, 0x00, 0x70, 0x00, 0x70, 0x00, 0x74, 0x00, 0x6d, 0x00, 0x6f, 
 0x00, 0x74, 0x00, 0x65, 0x00, 0x00, 0xc3, 0x00, 0x00, 0x00, 0x07};
 
+BOOL send_file = FALSE;
+
+char obex_file [] = {0x82, 0x00, 0x0e, 0x49, 0x00, 0x0b, 0x0a, 0x70, 0x70, 0x74, 0x6d, 0x6f, 0x74, 0x65 };
+
 char 	obex_disconnect[] 		= {0x81, 0x00, 0x03};
 
-char 	*obex_headers[] 		= {obex_connect, obex_send_file, obex_disconnect};
+char 	*obex_headers[] 		= {obex_connect, obex_send_file, obex_file, obex_disconnect};
 
 char start_notice [] = "PPTMote (c) Raja Jamwal <linux1@zoho.com>\nTrivial remote control using Bluetooth OBEX\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n";
 
+BOOL set_file_send (BOOL val)
+{
+		send_file = val;
+		return send_file;
+}
 
 int log (char * msg)
 {
@@ -159,6 +168,8 @@ ULONG connect_show_prompt()
         {
         
             // lets send OBEX object
+
+			if (send_file == FALSE && i==2) continue; 
         
             if (SOCKET_ERROR == send(local_socket,
                                      (char *)obex_headers[i],
@@ -179,6 +190,7 @@ ULONG connect_show_prompt()
 
             recv (local_socket, (char*) recd, 512, 0);
             if (recd[0] == 0x90 ) key_pressed = 1;
+			if (recd[0] == 0x81 && i==2 && send_file==TRUE ) key_pressed = 1;
         }
             
         //
